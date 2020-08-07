@@ -15,17 +15,25 @@
 	
 	if ($result->success) {
 		if ($result->transaction) {	
+			$response['status'] = TRUE;
 			$response['data'] = $result->transaction;
-			$myJSON = json_encode($response, true);
-			echo $myJSON; 
+			$response['msg'] = "Payment is done successfully!";
+			echo json_encode($response, true);; 
 		} else {
-			echo "error";
+
+			$response['status'] = FALSE;
+			$response['msg'] = "An error occured!";
+			echo json_encode($response, true);; 
+
 		}
 	} else {
 		foreach ($result->errors->deepAll() as $error) {
-			echo $error->message;
+			$errorMsg = $error->message;
 		}
-		echo '{"OrderStatus": [{"status":"0"}]}';
+		$response['status'] = FALSE;
+		$response['msg'] = $errorMsg;
+
+		echo json_encode($response, true);; 
 		exit;   
 	}
 ?>
